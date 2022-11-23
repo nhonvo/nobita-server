@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDBank.Web", "HDBank.Web\HDBank.Web.csproj", "{4E403172-92ED-46DD-8053-ADF078FE8085}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HDBank.Web", "HDBank.Web\HDBank.Web.csproj", "{4E403172-92ED-46DD-8053-ADF078FE8085}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDBank.Core", "HDBank.Core\HDBank.Core.csproj", "{82AF7689-DB71-48DE-B56E-75D738F0B575}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HDBank.Core", "HDBank.Core\HDBank.Core.csproj", "{82AF7689-DB71-48DE-B56E-75D738F0B575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDBank.Infrastructure", "HDBank.Infrastructure\HDBank.Infrastructure.csproj", "{7D061CE8-A51A-4AB3-8D42-99E8481044E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDBank.API", "HDBank.API\HDBank.API.csproj", "{579305B2-BBC2-464B-BEBC-90C9F15F3631}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{82AF7689-DB71-48DE-B56E-75D738F0B575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82AF7689-DB71-48DE-B56E-75D738F0B575}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82AF7689-DB71-48DE-B56E-75D738F0B575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D061CE8-A51A-4AB3-8D42-99E8481044E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D061CE8-A51A-4AB3-8D42-99E8481044E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D061CE8-A51A-4AB3-8D42-99E8481044E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D061CE8-A51A-4AB3-8D42-99E8481044E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{579305B2-BBC2-464B-BEBC-90C9F15F3631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{579305B2-BBC2-464B-BEBC-90C9F15F3631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{579305B2-BBC2-464B-BEBC-90C9F15F3631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{579305B2-BBC2-464B-BEBC-90C9F15F3631}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
