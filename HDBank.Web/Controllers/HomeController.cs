@@ -2,8 +2,11 @@
 using HDBank.Core.Interfaces;
 using HDBank.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace HDBank.Web.Controllers
 {
