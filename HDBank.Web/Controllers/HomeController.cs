@@ -44,18 +44,20 @@ namespace HDBank.Web.Controllers
                 UserName = model.UserName,
                 Password = model.Password
             };
-            var key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
+            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             var credential = _service.GenerateCredential(data, key);
-            return Content(credential);
             Console.WriteLine("Credential" + credential);
             var request = new BankRequest<LoginRequest>();
             // Encrypt to credential
-            var csp = new RSACryptoServiceProvider(2048);
             request.Data = new LoginRequest();
             request.Data.Credential = credential;
+            //request.Data.Credential = "XRudff//ZBF7QJKh2P5K6r/U5aH5MwsNJ3QWdDIS9EI2K0wQZhZ+/PyZ956hlSD930/n40uPAnYMCL5y6a2rJY/NOVLaV/qhGM4u4Pj4CD+nKsEegkfml4bNCjcykJ6WDXvwLqoZfRbtbQUvc91uSqddlwSmZ5qtXpHuSmFEqVY=";
             request.Data.Key = key;
+            request.Request = new RequestModel();
+            Console.WriteLine("Time Now : " + DateTime.Now.ToString());
 
             var result = await _service.Login(request);
+
             Console.WriteLine(result);
             return RedirectToAction(nameof(Index));
         }
