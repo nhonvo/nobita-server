@@ -8,8 +8,23 @@ namespace HDBank.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult Authorize()
+        [HttpPost("login")]
+        public IActionResult Login()
+        {
+            return Ok();
+        }
+        [HttpPost("register")]
+        public IActionResult Register()
+        {
+            return Ok();
+        }
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword()
+        {
+            return Ok();
+        }
+        [HttpGet("balance")]
+        public IActionResult Balance()
         {
             return Ok();
         }
