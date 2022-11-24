@@ -1,6 +1,5 @@
 using HDBank.Core.Interfaces;
 using HDBank.Core.Services;
-using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +10,7 @@ builder.Services.AddHttpClient("HDBank", httpClient =>
     var baseAddress = builder.Configuration["BaseUrl:HDBank"];
     httpClient.BaseAddress = new Uri(baseAddress);
     //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "hutech_hackathon@123456");
-    //httpClient.DefaultRequestHeaders.Add("x-api-key", "hutech_hackathon@123456");
-
+    httpClient.DefaultRequestHeaders.Add("x-api-key", "hutech_hackathon@123456");
 });
 builder.Services.AddScoped<IAPIService, APIService>();
 var app = builder.Build();

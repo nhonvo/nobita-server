@@ -66,29 +66,5 @@ namespace HDBank.Core.Services
                 return null;
             }
         }
-        public static byte[] GetModulus(byte[] pDer)
-        {
-            //Size header is 29 bits
-            //The key size modulus is 128 bits, but in hexa string the size is 2 digits => 256 
-            string lModulus = BitConverter.ToString(pDer).Replace("-", "").Substring(58, 256);
-
-            return StringHexToByteArray(lModulus);
-        }
-
-        public static byte[] GetExponent(byte[] pDer)
-        {
-            int lExponentLenght = pDer[pDer.Length - 3];
-            string lExponent = BitConverter.ToString(pDer).Replace("-", "").Substring((pDer.Length * 2) - lExponentLenght * 2, lExponentLenght * 2);
-
-            return StringHexToByteArray(lExponent);
-        }
-
-        public static byte[] StringHexToByteArray(string hex)
-        {
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
-        }
     }
 }
