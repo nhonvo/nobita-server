@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace HDBank.Core.Aggregate
 {
     public class RequestModel
     {
-        //public string RequestId { get; set; } = Guid.NewGuid().ToString();
-        //public string RequestTime { get; set; } = DateTime.Now.ToString();
+        [JsonProperty("requestId")]
+        public string RequestId { get; set; } = Guid.NewGuid().ToString();
+        [JsonProperty("requestTime")]
+        public string RequestTime { get; set; } = DateTime.Now.ToString();
     }
 }

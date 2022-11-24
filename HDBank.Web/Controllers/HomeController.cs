@@ -35,7 +35,6 @@ namespace HDBank.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            Console.WriteLine(model.UserName);
             LoginData data = new()
             {
                 UserName = model.UserName,
