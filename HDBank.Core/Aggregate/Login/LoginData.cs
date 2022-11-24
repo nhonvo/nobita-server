@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using HDBank.Core.Interfaces;
+using Newtonsoft.Json;
 
-namespace HDBank.Core.Aggregate
+namespace HDBank.Core.Aggregate.Login
 {
-    public class LoginData
+    public class LoginData : IData
     {
         [JsonProperty("username")]
         public string UserName { get; set; }
