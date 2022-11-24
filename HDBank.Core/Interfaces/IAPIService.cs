@@ -2,6 +2,7 @@
 using HDBank.Core.Aggregate.GetKey;
 using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.RefreshToken;
+using HDBank.Core.Aggregate.Register;
 using System.Threading.Tasks;
 
 namespace HDBank.Core.Interfaces
@@ -10,6 +11,7 @@ namespace HDBank.Core.Interfaces
     {
         Task<BankResponse<GetKeyResponseData>> GetKey();
         Task<BankResponse<LoginResponseData>> Login(BankRequest<LoginRequestData> request);
+        Task<BankResponse<RegisterResponseData>> Register(BankRequest<RegisterRequestData> request);
         string GenerateCredential(IData data, string publicKey);
         Task<RefreshTokenResponse> RefeshToken();
     }

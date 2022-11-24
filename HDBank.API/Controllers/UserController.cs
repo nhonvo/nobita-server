@@ -1,7 +1,10 @@
-﻿using HDBank.Core.Aggregate;
+﻿using HDBank.API.Models;
+using HDBank.Core.Aggregate;
 using HDBank.Core.Aggregate.Login;
+using HDBank.Core.Aggregate.Register;
 using HDBank.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,7 +24,7 @@ namespace HDBank.API.Controllers
         public async Task<IActionResult> Login(LoginData request)
         {
             var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
-            BankRequest<LoginRequestData> bankRequest = new BankRequest<LoginRequestData>();
+            BankRequest<LoginRequestData> bankRequest = new();
             bankRequest.Data = new LoginRequestData()
             {
                 Credential = _service.GenerateCredential(request, key),
@@ -33,14 +36,36 @@ namespace HDBank.API.Controllers
             {
                 return Ok(response.Data);
             }
-            return BadRequest(response.Data);
+            return BadRequest(response.Response.ResponseMessage);
         }
         // TODO: request contain: credential{username, password}, email, number, phone
 
         [HttpPost("register")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register(RegisterModel request)
         {
-            return Ok();
+            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
+            BankRequest<RegisterRequestData> bankRequest = new();
+            RegisterData registerData = new()
+            {
+                UserName = request.UserName,
+                Password = request.Password
+            };
+            bankRequest.Data = new RegisterRequestData()
+            {
+                Credential = _service.GenerateCredential(registerData, key),
+                FullName = request.FullName,
+                Email = request.Email,
+                IdentityNumber = request.IdentityNumber,
+                Key = key,
+                Phone = request.Phone
+            };
+
+            var response = await _service.Register(bankRequest);
+            if (response.Response.ResponseCode == "00")
+            {
+                return Ok(response.Data);
+            }
+            return BadRequest(response.Response.ResponseMessage);
         }
         // TODO: request contain: credential{username, old password, new password}, 
         [HttpPost("change-password")]
