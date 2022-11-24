@@ -1,4 +1,5 @@
 ﻿using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.GetKey;
 using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.RefreshToken;
@@ -134,6 +135,23 @@ namespace HDBank.Core.Services
             }
             return new RefreshTokenResponse();
 
+        }
+
+        public async Task<BankResponse<ChangePasswordResponseData>> ChangePassword(BankRequest<ChangePasswordRequestData> request)
+        {
+            var client = _httpClientFactory.CreateClient("HDBank");
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            client.DefaultRequestHeaders.Add("access-token", "eyJraWQiOiJXcDRGMndiQVpMa1d2WWgyNDhnYjNtUHBLRzZTdDRNcG85Tmc3U2diZ2E0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0MGM1OGU1ZC05ZjMxLTRmOGQtOGZmMC0xZDVkZTZhMzQxM2YiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoZWFzdC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoZWFzdC0xX1FiMVE4VFBzVSIsImNvZ25pdG86dXNlcm5hbWUiOiI0MGM1OGU1ZC05ZjMxLTRmOGQtOGZmMC0xZDVkZTZhMzQxM2YiLCJvcmlnaW5fanRpIjoiNjA1OGEyZjQtZjcxZS00MzgyLTlhMjMtM2I5MTczNzg3YTQxIiwiYXVkIjoic2lrY25laTR0MmgzbnRrcWo1ZDQ5bHR2ciIsImV2ZW50X2lkIjoiMTkzYzM4M2MtYzcyMy00MjQ3LWIyM2MtMGE3YzM4MTgyNzYzIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2NjkyMTUxNzMsIm5hbWUiOiJUcnVvbmdOaG9uIiwiZXhwIjoxNjY5Mzc5ODk1LCJpYXQiOjE2NjkyOTM0OTUsImp0aSI6ImIwODgxZmI0LTViYzEtNDVkMS1hZTI4LTllMzYwMjFiOGJlNCIsImVtYWlsIjoidm90aHVvbmd0cnVvbmduaG9uMjAwMkBnbWFpbC5jb20ifQ.uR0MULrVjCTXXfu9vvMuD-_vOxxNoCnqbcqGhu_rF3CCR0VlGs1heBaViJHaQ9qKp8b2wGf1wUgE19bt99XFWJVx0CoMdWcISX7tZFX0jcm6OUoQrioR19Le9YWuYjrp8xIcqdcb_-vUNyrPD4hj8qMNdbC7pbYQzkLCkQnvghnGBWndCEO09UkgQryOPjTHBk-CE5-JhmrakO7Gx_Dsg8s4nTJ6ZYUexbYAnyOwHGFbmNdkBNu9ACYBS4RyT0D6ukTK9CNjrQkBczj7QwR04DotHf9Tw8AN5E2RKnPoDQajpgsnhx0jAUDVuqh8cap54EME2kDHa_TqPOseDqSWqA");
+            var response = await client.PostAsync($"change_password", httpContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync()!;
+                var obj = JsonConvert.DeserializeObject<BankResponse<ChangePasswordResponseData>>(content);
+                return obj;
+            }
+            return new BankResponse<ChangePasswordResponseData>();
         }
     }
 }
