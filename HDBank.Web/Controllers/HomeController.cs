@@ -1,4 +1,5 @@
 ﻿using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Interfaces;
 using HDBank.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace HDBank.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _service.GetKey();
-            return View("Index", result);
+            return View("Index", result.Data.Key);
         }
         [HttpGet]
         public IActionResult Login()
@@ -38,7 +39,6 @@ namespace HDBank.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            Console.WriteLine(model.UserName);
             LoginData data = new()
             {
                 UserName = model.UserName,
@@ -46,19 +46,17 @@ namespace HDBank.Web.Controllers
             };
             var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             var credential = _service.GenerateCredential(data, key);
-            Console.WriteLine("Credential" + credential);
             var request = new BankRequest<LoginRequest>();
             // Encrypt to credential
             request.Data = new LoginRequest();
             request.Data.Credential = credential;
-            //request.Data.Credential = "XRudff//ZBF7QJKh2P5K6r/U5aH5MwsNJ3QWdDIS9EI2K0wQZhZ+/PyZ956hlSD930/n40uPAnYMCL5y6a2rJY/NOVLaV/qhGM4u4Pj4CD+nKsEegkfml4bNCjcykJ6WDXvwLqoZfRbtbQUvc91uSqddlwSmZ5qtXpHuSmFEqVY=";
             request.Data.Key = key;
             request.Request = new RequestModel();
             Console.WriteLine("Time Now : " + DateTime.Now.ToString());
 
             var result = await _service.Login(request);
-
-            Console.WriteLine(result);
+            if (result.Response.ResponseCode == "00")
+                return Content(result.Data.AccountNo);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Privacy()
