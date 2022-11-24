@@ -9,7 +9,7 @@ namespace HDBank.Core.Interfaces
     public interface IAPIService
     {
         Task<BankResponse<GetKeyResponseData>> GetKey();
-        Task<BankResponse<LoginResponseData>> Login(BankRequest<LoginRequest> request);
+        Task<BankResponse<LoginResponseData>> Login(BankRequest<LoginRequestData> request);
         string GenerateCredential(IData data, string publicKey);
         Task<RefreshTokenResponse> RefeshToken();
     }

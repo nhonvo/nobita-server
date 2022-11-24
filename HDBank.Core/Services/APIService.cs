@@ -77,7 +77,7 @@ namespace HDBank.Core.Services
 
             return new BankResponse<GetKeyResponseData>();
         }
-        public async Task<BankResponse<LoginResponseData>> Login(BankRequest<LoginRequest> request)
+        public async Task<BankResponse<LoginResponseData>> Login(BankRequest<LoginRequestData> request)
         {
             var client = _httpClientFactory.CreateClient("HDBank");
             var json = JsonConvert.SerializeObject(request);
