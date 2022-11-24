@@ -35,16 +35,21 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Data);
         }
+        // TODO: request contain: credential{username, password}, email, number, phone
+
         [HttpPost("register")]
         public IActionResult Register()
         {
             return Ok();
         }
+        // TODO: request contain: credential{username, old password, new password}, 
         [HttpPost("change-password")]
         public IActionResult ChangePassword()
         {
             return Ok();
         }
+        // TODO: request contain: account number
+        // reponse contain: amount
         [HttpGet("balance")]
         public IActionResult Balance()
         {
@@ -56,5 +61,10 @@ namespace HDBank.API.Controllers
             var response = await _service.RefeshToken();
             return Ok(response.AccessToken);
         }
+        // TODO: request contain: ?description, amount, to account number
+        // response contain: 
+        // TODO: request contain: 
+        // response contain:
+        
     }
 }
