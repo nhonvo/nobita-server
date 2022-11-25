@@ -1,5 +1,6 @@
 ﻿using HDBank.Core.Aggregate;
 using HDBank.Core.Aggregate.Login;
+using HDBank.Core.Aggregate.Tranfer;
 using HDBank.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,10 +62,17 @@ namespace HDBank.API.Controllers
             var response = await _service.RefeshToken();
             return Ok(response.AccessToken);
         }
-        // TODO: request contain: ?description, amount, to account number
+        // 
+        // TODO: TRANFER(NHON) request contain: ?description, amount, to account number
         // response contain: 
+        [HttpPost("tranfer")]
+        public async Task<IActionResult> Tranfer(BankRequest<TransferRequestData> request)
+        {
+            var response = await _service.Tranfer(request);
+            return Ok(response);
+        }
         // TODO: request contain: 
         // response contain:
-        
+
     }
 }
