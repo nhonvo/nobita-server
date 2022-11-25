@@ -79,7 +79,7 @@ namespace HDBank.API.Controllers
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel request)
         {
-            ChangePasswordData changePasswordModel = new()
+            ChangePasswordData changePasswordData = new()
             {
                 UserName = request.UserName,
                 OldPassword = request.OldPassword,
@@ -88,7 +88,7 @@ namespace HDBank.API.Controllers
             BankRequest<ChangePasswordRequestData> bankRequest = new();
             bankRequest.Data = new ChangePasswordRequestData()
             {
-                Credential = _service.GenerateCredential(changePasswordModel, key),
+                Credential = _service.GenerateCredential(changePasswordData, key),
                 Key = key
             };
 
@@ -110,7 +110,7 @@ namespace HDBank.API.Controllers
         // TODO: TRANFER(NHON) request contain: ?description, amount, to account number
         // response contain: 
         [HttpPost("tranfer")]
-        public async Task<IActionResult> Tranfer(TransferRequestData request)
+        public async Task<IActionResult> Tranfer(TransferModel request)
         {
             BankRequest<TransferRequestData> bankRequest = new();
             bankRequest.Data = new TransferRequestData()
@@ -130,7 +130,7 @@ namespace HDBank.API.Controllers
         // TODO: request contain: Get trafer history
         // response contain:
         [HttpPost("get-transfer-history")]
-        public async Task<IActionResult> GetTransferHistory(TranferHistoryRequestData request)
+        public async Task<IActionResult> GetTransferHistory(TranferHistoryModel request)
         {
             BankRequest<TranferHistoryRequestData> bankRequest = new();
             bankRequest.Data = new TranferHistoryRequestData()
@@ -148,7 +148,7 @@ namespace HDBank.API.Controllers
         }
         // Bug: post but in swagger is get
         [HttpPost("balance")]
-        public async Task<IActionResult> Balance(BalanceRequestData request)
+        public async Task<IActionResult> Balance(BalanceModel request)
         {
             BankRequest<BalanceRequestData> bankRequest = new();
             bankRequest.Data = new BalanceRequestData()
