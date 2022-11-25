@@ -4,6 +4,7 @@ using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.Register;
 using HDBank.Core.Aggregate.Tranfer;
+using HDBank.Core.Aggregate.TranferHistory;
 using HDBank.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -133,8 +134,25 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Response.ResponseMessage);
         }
-        // TODO: request contain: 
+        // TODO: request contain: Get trafer history
         // response contain:
+        [HttpPost("get-transfer-history")]
+        public async Task<IActionResult> GetTransferHistory(TranferHistoryRequestData request)
+        {
+            BankRequest<TranferHistoryRequestData> bankRequest = new();
+            bankRequest.Data = new TranferHistoryRequestData()
+            {
+                AccountNumber = request.AccountNumber,
+                FromDate = request.FromDate,
+                ToDate = request.ToDate
+            };
+            var response = await _service.TranferHistory(bankRequest);
+            if (response.Response.ResponseCode == "00")
+            {
+                return Ok(response.Data);
+            }
+            return BadRequest(response.Response.ResponseMessage);
+        }
 
     }
 }

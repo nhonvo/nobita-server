@@ -5,6 +5,7 @@ using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.RefreshToken;
 using HDBank.Core.Aggregate.Register;
 using HDBank.Core.Aggregate.Tranfer;
+using HDBank.Core.Aggregate.TranferHistory;
 using System.Threading.Tasks;
 
 namespace HDBank.Core.Interfaces
@@ -18,6 +19,9 @@ namespace HDBank.Core.Interfaces
         string GenerateCredential(IData data, string publicKey);
         Task<RefreshTokenResponse> RefeshToken();
         Task<BankResponse<TransferResponseData>> Tranfer(BankRequest<TransferRequestData> request);
+        Task<BankResponse<TranferHistoryResponseData>> TranferHistory(BankRequest<TranferHistoryRequestData> request);
+
+
 
     }
 }
