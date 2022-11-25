@@ -10,7 +10,7 @@ namespace HDBank.Core.Aggregate.Tranfer
     public class TransferRequestData
     {
         [JsonProperty("amount")]
-        public string UserName { get; set; }
+        public int Amount { get; set; }
         [JsonProperty("description")]
         public string Description { get; set; }
         [JsonProperty("fromAcct")]

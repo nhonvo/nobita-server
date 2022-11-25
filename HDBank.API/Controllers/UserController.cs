@@ -27,7 +27,7 @@ namespace HDBank.API.Controllers
         {
             var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             LoginData loginData = new()
-            { 
+            {
                 UserName = request.UserName,
                 Password = request.Password
             };
@@ -116,10 +116,22 @@ namespace HDBank.API.Controllers
         // TODO: TRANFER(NHON) request contain: ?description, amount, to account number
         // response contain: 
         [HttpPost("tranfer")]
-        public async Task<IActionResult> Tranfer(BankRequest<TransferRequestData> request)
+        public async Task<IActionResult> Tranfer(TransferRequestData request)
         {
-            var response = await _service.Tranfer(request);
-            return Ok(response);
+            BankRequest<TransferRequestData> bankRequest = new();
+            bankRequest.Data = new TransferRequestData()
+            {
+                Amount = request.Amount,
+                Description = request.Description,
+                FromAccount = request.FromAccount,
+                ToAccount = request.ToAccount
+            };
+            var response = await _service.Tranfer(bankRequest);
+            if (response.Response.ResponseCode == "00")
+            {
+                return Ok(response.Response.ResponseMessage);
+            }
+            return BadRequest(response.Response.ResponseMessage);
         }
         // TODO: request contain: 
         // response contain:
