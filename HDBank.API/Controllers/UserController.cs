@@ -1,5 +1,7 @@
 ﻿using HDBank.API.Models;
+using HDBank.API.Services;
 using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.AppResult;
 using HDBank.Core.Aggregate.Balance;
 using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.Login;
@@ -7,8 +9,9 @@ using HDBank.Core.Aggregate.Register;
 using HDBank.Core.Aggregate.Tranfer;
 using HDBank.Core.Aggregate.TranferHistory;
 using HDBank.Core.Interfaces;
+using HDBank.Infrastructure.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,10 +22,12 @@ namespace HDBank.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IAPIService _service;
+        private readonly IAppService _appService;
 
-        public UserController(IAPIService service)
+        public UserController(IAPIService service, IAppService appService)
         {
             _service = service;
+            _appService = appService;
         }
         public string key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
         [HttpPost("login")]
@@ -43,9 +48,15 @@ namespace HDBank.API.Controllers
             var response = await _service.Login(bankRequest);
             if (response.Response.ResponseCode == "00")
             {
-                return Ok(response.Data);
+                return BadRequest(new ApiErrorResult<string>(response.Response.ResponseMessage));
             }
-            return BadRequest(response.Response.ResponseMessage);
+            var appResponse = await _appService.Authenticate(request);
+            if (appResponse.Succeeded)
+            {
+                return Ok(appResponse);
+            }
+            return BadRequest(appResponse);
+
         }
         // TODO: request contain: credential{username, password}, email, number, phone
 

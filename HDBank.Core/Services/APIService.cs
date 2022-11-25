@@ -9,9 +9,6 @@ using HDBank.Core.Aggregate.Tranfer;
 using HDBank.Core.Aggregate.TranferHistory;
 using HDBank.Core.Interfaces;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -59,10 +56,11 @@ namespace HDBank.Core.Services
                 //(using RSACryptoServiceProvider.ExportParameters(false),
                 //and a boolean flag specifying no OAEP padding.
                 encryptedData = RSAService.RSAEncrypt(dataToEncrypt, rsa.ExportParameters(false), false);
-
+                if (encryptedData == null)
+                    throw new Exception(); 
                 return Convert.ToBase64String(encryptedData);
             }
-            catch (ArgumentNullException)
+            catch (Exception)
             {
                 //Catch this exception in case the encryption did
                 //not succeed.
