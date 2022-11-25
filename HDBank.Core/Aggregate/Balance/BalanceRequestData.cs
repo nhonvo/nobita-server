@@ -11,6 +11,6 @@ namespace HDBank.Core.Aggregate.Balance
     {
         [JsonProperty("acctNo")]
         public string AccountNumber { get; set; }
-        
+
     }
 }
