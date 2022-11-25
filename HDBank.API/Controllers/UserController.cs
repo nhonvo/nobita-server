@@ -10,6 +10,8 @@ using HDBank.Core.Aggregate.Tranfer;
 using HDBank.Core.Aggregate.TranferHistory;
 using HDBank.Core.Interfaces;
 using HDBank.Infrastructure.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -136,7 +138,7 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Response.ResponseMessage);
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("get-access-token")]
         public async Task<IActionResult> GetAccessToken()
         {

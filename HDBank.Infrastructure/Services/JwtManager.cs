@@ -25,7 +25,6 @@ namespace HDBank.Infrastructure.Services
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.GivenName, user.FullName),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
             new Claim(ClaimTypes.UserData, user.AccountNo)
         };
             foreach (var role in roles)
