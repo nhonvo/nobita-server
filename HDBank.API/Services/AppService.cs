@@ -2,9 +2,11 @@
 using HDBank.API.Models;
 using HDBank.API.Models.Response;
 using HDBank.Core.Aggregate.AppResult;
+using HDBank.Infrastructure.Data;
 using HDBank.Infrastructure.Models;
 using HDBank.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 
@@ -15,12 +17,14 @@ namespace HDBank.API.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtManager _jwtManager;
         private readonly IMapper _mapper;
+        private readonly HDBankDbContext _context;
 
-        public AppService(UserManager<AppUser> userManager, IJwtManager jwtManager, IMapper mapper)
+        public AppService(UserManager<AppUser> userManager, IJwtManager jwtManager, IMapper mapper, HDBankDbContext context)
         {
             _userManager = userManager;
             _jwtManager = jwtManager;
             _mapper = mapper;
+            _context = context;
         }
         public async Task<ApiResult<string>> Authenticate(LoginModel request)
         {
@@ -43,7 +47,14 @@ namespace HDBank.API.Services
             var result = _mapper.Map<UserInfoResponse>(user);
             return new ApiSuccessResult<UserInfoResponse>(result);
         }
-
+        public async Task<ApiResult<UserInfoResponse>> GetByAccountNo(string accountNo)
+        {
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.AccountNo == accountNo);
+            if (user == null)
+                return new ApiErrorResult<UserInfoResponse>("User does not exist!");
+            var result = _mapper.Map<UserInfoResponse>(user);
+            return new ApiSuccessResult<UserInfoResponse>(result);
+        }
 
         public async Task<ApiResult<bool>> Register(RegisterModel request, string accountNo)
         {
@@ -66,6 +77,31 @@ namespace HDBank.API.Services
             if (result.Succeeded)
                 return new ApiSuccessResult<bool>(true);
             return new ApiErrorResult<bool>(string.Join(' ', result.Errors.Select(error => error.Description)));
+        }
+
+        public async Task<ApiResult<bool>> CreateTransaction(TransferModel request, ClaimsPrincipal claims)
+        {
+            var senderResponse = await GetByClaims(claims);
+            if (!senderResponse.Succeeded)
+                return new ApiErrorResult<bool>("Cannot found sender");
+            var receiverResponse = await GetByAccountNo(request.ToAccount);
+            if (!receiverResponse.Succeeded)
+                return new ApiErrorResult<bool>("Cannot found receiver");
+
+
+            var transaction = new Transaction()
+            {
+                SenderId = senderResponse.ResultObject.Id,
+                ReceiverId = receiverResponse.ResultObject.Id,
+                Amount = request.Amount,
+                Description = request.Description,
+            };
+
+            await _context.Transactions.AddAsync(transaction);
+            int result = await _context.SaveChangesAsync();
+            if (result > 0)
+                return new ApiSuccessResult<bool>(true);
+            return new ApiErrorResult<bool>("Nothing change");
         }
     }
 }

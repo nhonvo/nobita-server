@@ -23,10 +23,10 @@ namespace HDBank.Infrastructure.Services
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.GivenName, user.FullName),
+            new Claim(ClaimTypes.GivenName, user.FullName ?? "null"),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.UserData, user.AccountNo),
-            new Claim(ClaimTypes.SerialNumber, user.IdentityNumber)
+            new Claim(ClaimTypes.UserData, user.AccountNo ?? "null"),
+            new Claim(ClaimTypes.SerialNumber, user.IdentityNumber ?? "null")
         };
             foreach (var role in roles)
                 tokenClaims.Add(new Claim(ClaimTypes.Role, role));

@@ -10,5 +10,7 @@ namespace HDBank.API.Services
         Task<ApiResult<string>> Authenticate(LoginModel request);
         Task<ApiResult<bool>> Register(RegisterModel request, string accountNo);
         Task<ApiResult<UserInfoResponse>> GetByClaims(ClaimsPrincipal claims);
+        Task<ApiResult<UserInfoResponse>> GetByAccountNo(string accountNo);
+        Task<ApiResult<bool>> CreateTransaction(TransferModel request, ClaimsPrincipal claims);
     }
 }

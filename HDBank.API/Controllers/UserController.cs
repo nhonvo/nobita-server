@@ -159,23 +159,30 @@ namespace HDBank.API.Controllers
         // 
         // TODO: TRANFER(NHON) request contain: ?description, amount, to account number
         // response contain: 
+        [Authorize]
         [HttpPost("tranfer")]
         public async Task<IActionResult> Tranfer(TransferModel request)
         {
+            var userResponse = await _appService.GetByClaims(User);
             BankRequest<TransferRequestData> bankRequest = new();
             bankRequest.Data = new TransferRequestData()
             {
                 Amount = request.Amount,
+                FromAccount = userResponse.ResultObject.AccountNo,
                 Description = request.Description,
-                FromAccount = request.FromAccount,
                 ToAccount = request.ToAccount
             };
             var response = await _service.Tranfer(bankRequest);
-            if (response.Response.ResponseCode == "00")
+            if (response.Response.ResponseCode != "00")
             {
-                return Ok(response.Response.ResponseMessage);
+                return BadRequest(response.Response.ResponseMessage);
             }
-            return BadRequest(response.Response.ResponseMessage);
+            var appResponse = await _appService.CreateTransaction(request, User);
+            if (appResponse.Succeeded)
+            {
+                return Ok(appResponse);
+            }
+            return BadRequest(appResponse);
         }
         // TODO: request contain: Get trafer history
         // response contain:

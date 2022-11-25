@@ -10,5 +10,8 @@ namespace HDBank.Infrastructure.Models
         public string IdentityNumber { get; set; }
         [PersonalData]
         public string FullName { get; set; }
+
+        public IEnumerable<Transaction> SendTransactions { get; set; }
+        public IEnumerable<Transaction> ReceiveTransactions { get; set; }
     }
 }
