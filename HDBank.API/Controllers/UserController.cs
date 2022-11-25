@@ -101,13 +101,7 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Response.ResponseMessage);
         }
-        // TODO: request contain: account number
-        // reponse contain: amount
-        [HttpGet("balance")]
-        public IActionResult Balance()
-        {
-            return Ok();
-        }
+        
         [HttpGet("get-access-token")]
         public async Task<IActionResult> GetAccessToken()
         {

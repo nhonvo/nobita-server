@@ -22,8 +22,5 @@ namespace HDBank.Core.Interfaces
         Task<BankResponse<TransferResponseData>> Tranfer(BankRequest<TransferRequestData> request);
         Task<BankResponse<TranferHistoryResponseData>> TranferHistory(BankRequest<TranferHistoryRequestData> request);
         Task<BankResponse<BalanceResponseData>> Balance(BankRequest<BalanceRequestData> request);
-
-
-
     }
 }

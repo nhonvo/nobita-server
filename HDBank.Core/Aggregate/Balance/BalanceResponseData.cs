@@ -10,6 +10,6 @@ namespace HDBank.Core.Aggregate.Balance
     public class BalanceResponseData
     {
         [JsonProperty("amount")]
-        public int Amount { get; set; }
+        public String Amount { get; set; }
     }
 }
