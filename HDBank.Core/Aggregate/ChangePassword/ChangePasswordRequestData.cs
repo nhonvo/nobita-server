@@ -1,9 +1,8 @@
-﻿using HDBank.Core.Interfaces;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace HDBank.Core.Aggregate.Login
+namespace HDBank.Core.Aggregate.ChangePassword
 {
-    public class LoginRequestData
+    public class ChangePasswordRequestData
     {
         [JsonProperty("credential")]
         public string Credential { get; set; }

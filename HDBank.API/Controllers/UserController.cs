@@ -1,8 +1,15 @@
-﻿using HDBank.Core.Aggregate;
+﻿using HDBank.API.Models;
+using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.Login;
+<<<<<<< HEAD
 using HDBank.Core.Aggregate.Tranfer;
+=======
+using HDBank.Core.Aggregate.Register;
+>>>>>>> b838be29b92619ddbb0ce5d7e3ae12915e7e2ea7
 using HDBank.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,13 +26,18 @@ namespace HDBank.API.Controllers
             _service = service;
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginData request)
+        public async Task<IActionResult> Login(LoginModel request)
         {
             var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
-            BankRequest<LoginRequestData> bankRequest = new BankRequest<LoginRequestData>();
+            LoginData loginData = new()
+            { 
+                UserName = request.UserName,
+                Password = request.Password
+            };
+            BankRequest<LoginRequestData> bankRequest = new();
             bankRequest.Data = new LoginRequestData()
             {
-                Credential = _service.GenerateCredential(request, key),
+                Credential = _service.GenerateCredential(loginData, key),
                 Key = key
             };
 
@@ -34,20 +46,61 @@ namespace HDBank.API.Controllers
             {
                 return Ok(response.Data);
             }
-            return BadRequest(response.Data);
+            return BadRequest(response.Response.ResponseMessage);
         }
         // TODO: request contain: credential{username, password}, email, number, phone
 
         [HttpPost("register")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register(RegisterModel request)
         {
-            return Ok();
+            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
+            BankRequest<RegisterRequestData> bankRequest = new();
+            RegisterData registerData = new()
+            {
+                UserName = request.UserName,
+                Password = request.Password
+            };
+            bankRequest.Data = new RegisterRequestData()
+            {
+                Credential = _service.GenerateCredential(registerData, key),
+                FullName = request.FullName,
+                Email = request.Email,
+                IdentityNumber = request.IdentityNumber,
+                Key = key,
+                Phone = request.Phone
+            };
+
+            var response = await _service.Register(bankRequest);
+            if (response.Response.ResponseCode == "00")
+            {
+                return Ok(response.Data);
+            }
+            return BadRequest(response.Response.ResponseMessage);
         }
         // TODO: request contain: credential{username, old password, new password}, 
         [HttpPost("change-password")]
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel request)
         {
-            return Ok();
+            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
+            ChangePasswordData changePasswordModel = new()
+            {
+                UserName = request.UserName,
+                OldPassword = request.OldPassword,
+                NewPassword = request.NewPassword
+            };
+            BankRequest<ChangePasswordRequestData> bankRequest = new();
+            bankRequest.Data = new ChangePasswordRequestData()
+            {
+                Credential = _service.GenerateCredential(changePasswordModel, key),
+                Key = key
+            };
+
+            var response = await _service.ChangePassword(bankRequest);
+            if (response.Response.ResponseCode == "00")
+            {
+                return Ok(response.Response.ResponseMessage);
+            }
+            return BadRequest(response.Response.ResponseMessage);
         }
         // TODO: request contain: account number
         // reponse contain: amount
