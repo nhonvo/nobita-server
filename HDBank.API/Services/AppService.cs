@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using HDBank.API.Models;
+using HDBank.API.Models.Response;
 using HDBank.Core.Aggregate.AppResult;
 using HDBank.Infrastructure.Models;
 using HDBank.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json.Linq;
+using System.Security.Claims;
 
 namespace HDBank.API.Services
 {
@@ -31,6 +34,17 @@ namespace HDBank.API.Services
             var token = _jwtManager.Authenticate(user, roles);
             return new ApiSuccessResult<string>(token);
         }
+
+        public async Task<ApiResult<UserInfoResponse>> GetByClaims(ClaimsPrincipal claims)
+        {
+            var user = await _userManager.GetUserAsync(claims);
+            if (user == null)
+                return new ApiErrorResult<UserInfoResponse>("User does not exist!");
+            var result = _mapper.Map<UserInfoResponse>(user);
+            return new ApiSuccessResult<UserInfoResponse>(result);
+        }
+
+
         public async Task<ApiResult<bool>> Register(RegisterModel request, string accountNo)
         {
             var findUserName = await _userManager.FindByNameAsync(request.UserName);

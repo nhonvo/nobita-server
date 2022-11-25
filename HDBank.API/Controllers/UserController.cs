@@ -114,6 +114,17 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(appResponse);
         }
+        [Authorize]
+        [HttpGet("get-info")]
+        public async Task<IActionResult> GetInfo()
+        {
+            var response = await _appService.GetByClaims(User);
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
         // TODO: request contain: credential{username, old password, new password}, 
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel request)
@@ -138,7 +149,7 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Response.ResponseMessage);
         }
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize]
         [HttpGet("get-access-token")]
         public async Task<IActionResult> GetAccessToken()
         {

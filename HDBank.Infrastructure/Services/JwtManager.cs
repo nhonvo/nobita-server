@@ -25,7 +25,8 @@ namespace HDBank.Infrastructure.Services
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.GivenName, user.FullName),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.UserData, user.AccountNo)
+            new Claim(ClaimTypes.UserData, user.AccountNo),
+            new Claim(ClaimTypes.SerialNumber, user.IdentityNumber)
         };
             foreach (var role in roles)
                 tokenClaims.Add(new Claim(ClaimTypes.Role, role));
