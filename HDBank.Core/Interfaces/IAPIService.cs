@@ -3,11 +3,8 @@ using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.GetKey;
 using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.RefreshToken;
-<<<<<<< HEAD
-using HDBank.Core.Aggregate.Tranfer;
-=======
 using HDBank.Core.Aggregate.Register;
->>>>>>> b838be29b92619ddbb0ce5d7e3ae12915e7e2ea7
+using HDBank.Core.Aggregate.Tranfer;
 using System.Threading.Tasks;
 
 namespace HDBank.Core.Interfaces

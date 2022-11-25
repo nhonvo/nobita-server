@@ -2,11 +2,8 @@
 using HDBank.Core.Aggregate;
 using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.Login;
-<<<<<<< HEAD
-using HDBank.Core.Aggregate.Tranfer;
-=======
 using HDBank.Core.Aggregate.Register;
->>>>>>> b838be29b92619ddbb0ce5d7e3ae12915e7e2ea7
+using HDBank.Core.Aggregate.Tranfer;
 using HDBank.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;

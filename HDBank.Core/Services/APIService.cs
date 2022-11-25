@@ -3,11 +3,8 @@ using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.GetKey;
 using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.RefreshToken;
-<<<<<<< HEAD
 using HDBank.Core.Aggregate.Tranfer;
-=======
 using HDBank.Core.Aggregate.Register;
->>>>>>> b838be29b92619ddbb0ce5d7e3ae12915e7e2ea7
 using HDBank.Core.Interfaces;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -142,16 +139,11 @@ namespace HDBank.Core.Services
 
         }
 
-<<<<<<< HEAD
         public async Task<BankResponse<TransferResponseData>> Tranfer(BankRequest<TransferRequestData> request)
-=======
-        public async Task<BankResponse<ChangePasswordResponseData>> ChangePassword(BankRequest<ChangePasswordRequestData> request)
->>>>>>> b838be29b92619ddbb0ce5d7e3ae12915e7e2ea7
         {
             var client = _httpClientFactory.CreateClient("HDBank");
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-<<<<<<< HEAD
             client.DefaultRequestHeaders.Add("access-token", "eyJraWQiOiJXcDRGMndiQVpMa1d2WWgyNDhnYjNtUHBLRzZTdDRNcG85Tmc3U2diZ2E0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0Y2Y5MmRlNy05ZmQ0LTQyMjgtYTg2Mi1kYmM4YWUyYTM2MzEiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoZWFzdC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoZWFzdC0xX1FiMVE4VFBzVSIsImNvZ25pdG86dXNlcm5hbWUiOiI0Y2Y5MmRlNy05ZmQ0LTQyMjgtYTg2Mi1kYmM4YWUyYTM2MzEiLCJvcmlnaW5fanRpIjoiZjI0ODRiZGMtOWVlYi00YjYyLWI1MDktOGYxY2IzMmFhZGYwIiwiYXVkIjoic2lrY25laTR0MmgzbnRrcWo1ZDQ5bHR2ciIsImV2ZW50X2lkIjoiMzUyOTYzZTQtZjY5MS00OGZiLTk2MWUtMGZlZTczODc4YzdmIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2NjkxNzIwNDIsIm5hbWUiOiJOR1VZRU4gSE9ORyBUSEFJIiwiZXhwIjoxNjY5MjgwMjgzLCJpYXQiOjE2NjkxOTM4ODMsImp0aSI6IjEwY2E1MDM1LWFlNGItNDU0NC05OWJlLWZjY2NlOWQyY2Q3NSIsImVtYWlsIjoibmd1eWVuaG9uZ3RoYWkyODA0MjAwMkBnbWFpbC5jb20ifQ.eiJ8dJ3oaBnxTUdvjlR7WbfrW1eJZyI67WccgJlfnbpMZ2nsxTn3FoiWUCQZ01y9HSYHUf9qIbvlLdIKnpkuBzzRpgTajWveYuR4vZsua1WW-1NyeR-SFr8s9I2KxWFU-0CfStdGij_NeGBHhnl1b1IVzKtdaQixnO74JKQ8WNSZXsdobB1ATCyhB74V8TSeEHyFIaXeyclA0CDb-b93Y_KXso_n_JHcdhQ9mOuknR1V6SXqFDQjzwhIV7Ns84EheEOnxtaKv_ENDZo489dhviJAaCqQlXVS9HguXNHbB8xuqM7pp8sTMEvsAlgsgL-Wyl-WeIgeAD0PYqXxSIIR1A");
 
             var response = await client.PostAsync($"transfer", httpContent);
@@ -162,9 +154,12 @@ namespace HDBank.Core.Services
                 return obj;
             }
             return new BankResponse<TransferResponseData>();
-=======
-
+        }
+        public async Task<BankResponse<ChangePasswordResponseData>> ChangePassword(BankRequest<ChangePasswordRequestData> request)
+        {
+            var client = _httpClientFactory.CreateClient("HDBank");
             client.DefaultRequestHeaders.Add("access-token", "eyJraWQiOiJXcDRGMndiQVpMa1d2WWgyNDhnYjNtUHBLRzZTdDRNcG85Tmc3U2diZ2E0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0MGM1OGU1ZC05ZjMxLTRmOGQtOGZmMC0xZDVkZTZhMzQxM2YiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoZWFzdC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoZWFzdC0xX1FiMVE4VFBzVSIsImNvZ25pdG86dXNlcm5hbWUiOiI0MGM1OGU1ZC05ZjMxLTRmOGQtOGZmMC0xZDVkZTZhMzQxM2YiLCJvcmlnaW5fanRpIjoiNjA1OGEyZjQtZjcxZS00MzgyLTlhMjMtM2I5MTczNzg3YTQxIiwiYXVkIjoic2lrY25laTR0MmgzbnRrcWo1ZDQ5bHR2ciIsImV2ZW50X2lkIjoiMTkzYzM4M2MtYzcyMy00MjQ3LWIyM2MtMGE3YzM4MTgyNzYzIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2NjkyMTUxNzMsIm5hbWUiOiJUcnVvbmdOaG9uIiwiZXhwIjoxNjY5Mzc5ODk1LCJpYXQiOjE2NjkyOTM0OTUsImp0aSI6ImIwODgxZmI0LTViYzEtNDVkMS1hZTI4LTllMzYwMjFiOGJlNCIsImVtYWlsIjoidm90aHVvbmd0cnVvbmduaG9uMjAwMkBnbWFpbC5jb20ifQ.uR0MULrVjCTXXfu9vvMuD-_vOxxNoCnqbcqGhu_rF3CCR0VlGs1heBaViJHaQ9qKp8b2wGf1wUgE19bt99XFWJVx0CoMdWcISX7tZFX0jcm6OUoQrioR19Le9YWuYjrp8xIcqdcb_-vUNyrPD4hj8qMNdbC7pbYQzkLCkQnvghnGBWndCEO09UkgQryOPjTHBk-CE5-JhmrakO7Gx_Dsg8s4nTJ6ZYUexbYAnyOwHGFbmNdkBNu9ACYBS4RyT0D6ukTK9CNjrQkBczj7QwR04DotHf9Tw8AN5E2RKnPoDQajpgsnhx0jAUDVuqh8cap54EME2kDHa_TqPOseDqSWqA");
+            var httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             var response = await client.PostAsync($"change_password", httpContent);
             if (response.IsSuccessStatusCode)
             {
@@ -173,7 +168,6 @@ namespace HDBank.Core.Services
                 return obj;
             }
             return new BankResponse<ChangePasswordResponseData>();
->>>>>>> b838be29b92619ddbb0ce5d7e3ae12915e7e2ea7
         }
     }
 }
