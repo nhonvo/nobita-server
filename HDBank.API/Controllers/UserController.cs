@@ -24,10 +24,10 @@ namespace HDBank.API.Controllers
         {
             _service = service;
         }
+        public string key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel request)
         {
-            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             LoginData loginData = new()
             {
                 UserName = request.UserName,
@@ -52,7 +52,6 @@ namespace HDBank.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel request)
         {
-            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             BankRequest<RegisterRequestData> bankRequest = new();
             RegisterData registerData = new()
             {
@@ -80,7 +79,6 @@ namespace HDBank.API.Controllers
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel request)
         {
-            var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             ChangePasswordData changePasswordModel = new()
             {
                 UserName = request.UserName,
@@ -101,7 +99,7 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Response.ResponseMessage);
         }
-        
+
         [HttpGet("get-access-token")]
         public async Task<IActionResult> GetAccessToken()
         {
