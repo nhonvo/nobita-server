@@ -1,4 +1,5 @@
 ﻿using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.Balance;
 using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.GetKey;
 using HDBank.Core.Aggregate.Login;
@@ -20,6 +21,7 @@ namespace HDBank.Core.Interfaces
         Task<RefreshTokenResponse> RefeshToken();
         Task<BankResponse<TransferResponseData>> Tranfer(BankRequest<TransferRequestData> request);
         Task<BankResponse<TranferHistoryResponseData>> TranferHistory(BankRequest<TranferHistoryRequestData> request);
+        Task<BankResponse<BalanceResponseData>> Balance(BankRequest<BalanceRequestData> request);
 
 
 

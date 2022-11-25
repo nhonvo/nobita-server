@@ -1,4 +1,5 @@
 ﻿using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.Balance;
 using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.GetKey;
 using HDBank.Core.Aggregate.Login;
@@ -194,6 +195,23 @@ namespace HDBank.Core.Services
                 return obj;
             }
             return new BankResponse<TranferHistoryResponseData>();
+        }
+
+        public async Task<BankResponse<BalanceResponseData>> Balance(BankRequest<BalanceRequestData> request)
+        {
+            var client = _httpClientFactory.CreateClient("HDBank");
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            client.DefaultRequestHeaders.Add("access-token", $"{AccessToken}");
+            
+            var response = await client.PostAsync($"balance", httpContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync()!;
+                var obj = JsonConvert.DeserializeObject<BankResponse<BalanceResponseData>>(content);
+                return obj;
+            }
+            return new BankResponse<BalanceResponseData>();
         }
     }
 }

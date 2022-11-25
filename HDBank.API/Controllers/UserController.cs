@@ -1,5 +1,6 @@
 ﻿using HDBank.API.Models;
 using HDBank.Core.Aggregate;
+using HDBank.Core.Aggregate.Balance;
 using HDBank.Core.Aggregate.ChangePassword;
 using HDBank.Core.Aggregate.Login;
 using HDBank.Core.Aggregate.Register;
@@ -153,6 +154,21 @@ namespace HDBank.API.Controllers
             }
             return BadRequest(response.Response.ResponseMessage);
         }
-
+        // Bug: post but in swagger is get
+        [HttpPost("balance")]
+        public async Task<IActionResult> Balance(BalanceRequestData request)
+        {
+            BankRequest<BalanceRequestData> bankRequest = new();
+            bankRequest.Data = new BalanceRequestData()
+            {
+                AccountNumber = request.AccountNumber
+            };
+            var response = await _service.Balance(bankRequest);
+            if (response.Response.ResponseCode == "00")
+            {
+                return Ok(response.Data.Amount);
+            }
+            return BadRequest(response.Response.ResponseMessage);
+        }
     }
 }
