@@ -6,6 +6,6 @@ namespace HDBank.API.Services
     public interface IAppService
     {
         Task<ApiResult<string>> Authenticate(LoginModel request);
-        Task<ApiResult<bool>> Register(RegisterModel request);
+        Task<ApiResult<bool>> Register(RegisterModel request, string accountNo);
     }
 }

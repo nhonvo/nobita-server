@@ -8,7 +8,8 @@ namespace HDBank.Core.Mapper
     {
         public MapperProfile()
         {
-            CreateMap<RegisterModel, AppUser>();
+            CreateMap<RegisterModel, AppUser>()
+                .ForMember(des => des.PhoneNumber, act => act.MapFrom(src => src.Phone));
         }
     }
 }

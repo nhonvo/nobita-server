@@ -84,7 +84,28 @@ namespace HDBank.API.Controllers
             {
                 return BadRequest(new ApiErrorResult<string>(response.Response.ResponseMessage));
             }
-            var appResponse = await _appService.Register(request);
+
+            // Login to add AccNo
+            LoginData loginData = new()
+            {
+                UserName = request.UserName,
+                Password = request.Password
+            };
+
+            BankRequest<LoginRequestData> bankLoginRequest = new();
+            bankLoginRequest.Data = new LoginRequestData()
+            {
+                Credential = _service.GenerateCredential(loginData, key),
+                Key = key
+            };
+
+            var loginResponse = await _service.Login(bankLoginRequest);
+
+            if (loginResponse.Response.ResponseCode != "00")
+            {
+                return BadRequest(new ApiErrorResult<string>(loginResponse.Response.ResponseMessage));
+            }
+            var appResponse = await _appService.Register(request, loginResponse.Data.AccountNo);
             if (appResponse.Succeeded)
             {
                 return Ok(appResponse);

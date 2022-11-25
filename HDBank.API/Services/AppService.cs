@@ -31,7 +31,7 @@ namespace HDBank.API.Services
             var token = _jwtManager.Authenticate(user, roles);
             return new ApiSuccessResult<string>(token);
         }
-        public async Task<ApiResult<bool>> Register(RegisterModel request)
+        public async Task<ApiResult<bool>> Register(RegisterModel request, string accountNo)
         {
             var findUserName = await _userManager.FindByNameAsync(request.UserName);
             var findEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -46,6 +46,7 @@ namespace HDBank.API.Services
             //if (request.Password != request.ConfirmPassword)
             //    return new ApiErrorResult<bool>("Password and Confirm Password are not the same");
             var user = _mapper.Map<AppUser>(request);
+            user.AccountNo = accountNo;
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (result.Succeeded)
