@@ -46,7 +46,7 @@ namespace HDBank.API.Controllers
             };
 
             var response = await _service.Login(bankRequest);
-            if (response.Response.ResponseCode == "00")
+            if (response.Response.ResponseCode != "00")
             {
                 return BadRequest(new ApiErrorResult<string>(response.Response.ResponseMessage));
             }
@@ -80,11 +80,16 @@ namespace HDBank.API.Controllers
             };
 
             var response = await _service.Register(bankRequest);
-            if (response.Response.ResponseCode == "00")
+            if (response.Response.ResponseCode != "00")
             {
-                return Ok(response.Data);
+                return BadRequest(new ApiErrorResult<string>(response.Response.ResponseMessage));
             }
-            return BadRequest(response.Response.ResponseMessage);
+            var appResponse = await _appService.Register(request);
+            if (appResponse.Succeeded)
+            {
+                return Ok(appResponse);
+            }
+            return BadRequest(appResponse);
         }
         // TODO: request contain: credential{username, old password, new password}, 
         [HttpPost("change-password")]
