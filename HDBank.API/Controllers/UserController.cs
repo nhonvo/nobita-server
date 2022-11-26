@@ -179,19 +179,24 @@ namespace HDBank.API.Controllers
         [HttpPost("get-transfer-history")]
         public async Task<IActionResult> GetTransferHistory(TranferHistoryModel request)
         {
+            var userResponse = await _appService.GetByClaims(User);
+
             BankRequest<TranferHistoryRequestData> bankRequest = new();
+            string fromDate = request.FromDate.ToString("ddMMyyyy");
+            string toDate = request.ToDate.ToString("ddMMyyyy");
             bankRequest.Data = new TranferHistoryRequestData()
             {
-                AccountNumber = request.AccountNumber,
-                FromDate = request.FromDate,
-                ToDate = request.ToDate
+                AccountNumber = userResponse.ResultObject.AccountNo,
+                FromDate = fromDate,
+                ToDate = toDate
             };
             var response = await _service.TranferHistory(bankRequest);
             if (response.Response.ResponseCode != "00")
             {
                 return Ok(response.Data);
             }
-            return BadRequest(response.Response.ResponseMessage);
+            var appResponse = await _appService.GetTransactionHistory(request, userResponse.ResultObject.AccountNo);
+            return Ok(appResponse);
         }
         // Bug: post but in swagger is get
         [HttpGet("balance")]
