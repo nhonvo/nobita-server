@@ -46,9 +46,9 @@ namespace HDBank.Web.Controllers
             };
             var key = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
             var credential = _service.GenerateCredential(data, key);
-            var request = new BankRequest<LoginRequest>();
+            var request = new BankRequest<LoginRequestData>();
             // Encrypt to credential
-            request.Data = new LoginRequest();
+            request.Data = new LoginRequestData();
             request.Data.Credential = credential;
             request.Data.Key = key;
             request.Request = new RequestModel();

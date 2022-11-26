@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace HDBank.Core.Aggregate.Login
 {
-    public class LoginRequest : IData
+    public class LoginRequestData
     {
         [JsonProperty("credential")]
         public string Credential { get; set; }
