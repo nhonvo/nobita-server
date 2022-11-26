@@ -1,12 +1,14 @@
-﻿namespace HDBank.API.Models.Response
+﻿using Newtonsoft.Json;
+
+namespace HDBank.API.Models.Response
 {
     public class TransactionHistoryResponse
     {
-        public IList<TransactionHistory> Histories = new List<TransactionHistory>();
+        [JsonProperty("history")]
+        public IEnumerable<TransactionHistory> Histories;
     }
     public class TransactionHistory
     {
-
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public int Amount { get; set; }
         public string Description { get; set; }

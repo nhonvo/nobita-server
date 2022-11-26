@@ -1,4 +1,5 @@
 ﻿using HDBank.API.Models;
+using HDBank.API.Models.Response;
 using HDBank.API.Services;
 using HDBank.Core.Aggregate;
 using HDBank.Core.Aggregate.AppResult;
@@ -151,6 +152,13 @@ namespace HDBank.API.Controllers
             var response = await _service.RefeshToken();
             return Ok(response.AccessToken);
         }
+        [HttpGet("get-all-transaction")]
+        public async Task<ActionResult<TransactionHistoryResponse>> GetAllTransactions()
+        {
+            var userResponse = await _appService.GetByClaims(User);
+            var appResponse = await _appService.GetAllTransactionHistory(userResponse.ResultObject.AccountNo);
+            return Ok(appResponse);
+        }
         // 
         // TODO: TRANFER(NHON) request contain: ?description, amount, to account number
         // response contain: 
@@ -161,7 +169,7 @@ namespace HDBank.API.Controllers
             BankRequest<TransferRequestData> bankRequest = new();
             bankRequest.Data = new TransferRequestData()
             {
-                Amount = request.Amount,
+                Amount = request.Amount.ToString(),
                 FromAccount = userResponse.ResultObject.AccountNo,
                 Description = request.Description,
                 ToAccount = request.ToAccount
@@ -177,7 +185,7 @@ namespace HDBank.API.Controllers
         // TODO: request contain: Get trafer history
         // response contain:
         [HttpPost("get-transfer-history")]
-        public async Task<IActionResult> GetTransferHistory(TranferHistoryModel request)
+        public async Task<ActionResult<TransactionHistoryResponse>> GetTransferHistory(TranferHistoryModel request)
         {
             var userResponse = await _appService.GetByClaims(User);
 

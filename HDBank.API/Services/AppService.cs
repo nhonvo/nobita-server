@@ -120,7 +120,19 @@ namespace HDBank.API.Services
                 return new ApiErrorResult<bool>(string.Join(' ', result.Errors.Select(error => error.Description)));
             return new ApiSuccessResult<bool>(true);
         }
-
+        public async Task<ApiResult<TransactionHistoryResponse>> GetAllTransactionHistory(string acctNo)
+        {
+            var transactions = await _context.Transactions
+                .Include(t => t.Sender)
+                .Include(t => t.Receiver)
+                .ToListAsync();
+            var history = _mapper.Map<List<TransactionHistory>>(transactions);
+            var histories = new TransactionHistoryResponse()
+            {
+                Histories = history
+            };
+            return new ApiSuccessResult<TransactionHistoryResponse>(histories);
+        }
         public async Task<ApiResult<TransactionHistoryResponse>> GetTransactionHistory(TranferHistoryModel request, string acctNo)
         {
             var transactions = await _context.Transactions

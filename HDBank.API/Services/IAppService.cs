@@ -13,6 +13,7 @@ namespace HDBank.API.Services
         Task<ApiResult<UserInfoResponse>> GetByClaims(ClaimsPrincipal claims);
         Task<ApiResult<UserInfoResponse>> GetByAccountNo(string accountNo);
         Task<ApiResult<TransactionHistoryResponse>> GetTransactionHistory(TranferHistoryModel request, string acctNo);
+        Task<ApiResult<TransactionHistoryResponse>> GetAllTransactionHistory(string acctNo);
         Task<ApiResult<bool>> CreateTransaction(TransferModel request, ClaimsPrincipal claims);
     }
 }
