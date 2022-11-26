@@ -56,7 +56,7 @@ namespace HDBank.API.Services
             return new ApiSuccessResult<UserInfoResponse>(result);
         }
 
-        public async Task<ApiResult<bool>> Register(RegisterModel request, string accountNo)
+        public async Task<ApiResult<string>> Register(RegisterModel request, string accountNo)
         {
             var findUserName = await _userManager.FindByNameAsync(request.UserName);
             var findEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -65,9 +65,9 @@ namespace HDBank.API.Services
             var isEmailExists = findEmail != null;
 
             if (isUserNameExists)
-                return new ApiErrorResult<bool>("This Username Already Used!");
+                return new ApiErrorResult<string>("This Username Already Used!");
             if (isEmailExists)
-                return new ApiErrorResult<bool>("This Email Already Used");
+                return new ApiErrorResult<string>("This Email Already Used");
             //if (request.Password != request.ConfirmPassword)
             //    return new ApiErrorResult<bool>("Password and Confirm Password are not the same");
             var user = _mapper.Map<AppUser>(request);
@@ -75,8 +75,13 @@ namespace HDBank.API.Services
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (result.Succeeded)
-                return new ApiSuccessResult<bool>(true);
-            return new ApiErrorResult<bool>(string.Join(' ', result.Errors.Select(error => error.Description)));
+            {
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var token = _jwtManager.Authenticate(user, roles);
+                return new ApiSuccessResult<string>(token);
+            }
+            return new ApiErrorResult<string>(string.Join(' ', result.Errors.Select(error => error.Description)));
         }
 
         public async Task<ApiResult<bool>> CreateTransaction(TransferModel request, ClaimsPrincipal claims)
@@ -102,6 +107,18 @@ namespace HDBank.API.Services
             if (result > 0)
                 return new ApiSuccessResult<bool>(true);
             return new ApiErrorResult<bool>("Nothing change");
+        }
+
+        public async Task<ApiResult<bool>> ChangePassword(ChangePasswordModel request, ClaimsPrincipal claims)
+        {
+            var user = await _userManager.GetUserAsync(claims);
+            if (user == null)
+                return new ApiErrorResult<bool>("Cannot found user");
+
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+            if (!result.Succeeded)
+                return new ApiErrorResult<bool>(string.Join(' ', result.Errors.Select(error => error.Description)));
+            return new ApiSuccessResult<bool>(true);
         }
     }
 }

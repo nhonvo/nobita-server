@@ -8,7 +8,8 @@ namespace HDBank.API.Services
     public interface IAppService
     {
         Task<ApiResult<string>> Authenticate(LoginModel request);
-        Task<ApiResult<bool>> Register(RegisterModel request, string accountNo);
+        Task<ApiResult<string>> Register(RegisterModel request, string accountNo);
+        Task<ApiResult<bool>> ChangePassword(ChangePasswordModel request, ClaimsPrincipal claims);
         Task<ApiResult<UserInfoResponse>> GetByClaims(ClaimsPrincipal claims);
         Task<ApiResult<UserInfoResponse>> GetByAccountNo(string accountNo);
         Task<ApiResult<bool>> CreateTransaction(TransferModel request, ClaimsPrincipal claims);

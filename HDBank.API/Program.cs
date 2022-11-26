@@ -66,6 +66,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(o =>
     o.SignIn.RequireConfirmedPhoneNumber = false;
     o.SignIn.RequireConfirmedAccount = false;
     o.SignIn.RequireConfirmedEmail = false;
+    // User Settings
+    //o.User.RequireUniqueEmail = false;
     // Password Settings
     o.Password.RequireNonAlphanumeric = false;
     o.Password.RequireUppercase = false;

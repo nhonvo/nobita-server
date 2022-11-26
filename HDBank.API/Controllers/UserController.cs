@@ -9,10 +9,7 @@ using HDBank.Core.Aggregate.Register;
 using HDBank.Core.Aggregate.Tranfer;
 using HDBank.Core.Aggregate.TranferHistory;
 using HDBank.Core.Interfaces;
-using HDBank.Infrastructure.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -50,18 +47,17 @@ namespace HDBank.API.Controllers
             var response = await _service.Login(bankRequest);
             if (response.Response.ResponseCode != "00")
             {
-                return BadRequest(new ApiErrorResult<string>(response.Response.ResponseMessage));
+                return Ok(new ApiErrorResult<string>(response.Response.ResponseMessage));
             }
             var appResponse = await _appService.Authenticate(request);
-            if (appResponse.Succeeded)
-            {
-                return Ok(appResponse);
-            }
-            return BadRequest(appResponse);
+            return Ok(appResponse);
+            //if (appResponse.Succeeded)
+            //{
+            //}
+            //return BadRequest(appResponse);
 
         }
         // TODO: request contain: credential{username, password}, email, number, phone
-
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel request)
         {
@@ -84,7 +80,7 @@ namespace HDBank.API.Controllers
             var response = await _service.Register(bankRequest);
             if (response.Response.ResponseCode != "00")
             {
-                return BadRequest(new ApiErrorResult<string>(response.Response.ResponseMessage));
+                return Ok(new ApiErrorResult<string>(response.Response.ResponseMessage));
             }
 
             // Login to add AccNo
@@ -105,25 +101,38 @@ namespace HDBank.API.Controllers
 
             if (loginResponse.Response.ResponseCode != "00")
             {
-                return BadRequest(new ApiErrorResult<string>(loginResponse.Response.ResponseMessage));
+                return Ok(new ApiErrorResult<string>(loginResponse.Response.ResponseMessage));
             }
+
             var appResponse = await _appService.Register(request, loginResponse.Data.AccountNo);
-            if (appResponse.Succeeded)
-            {
-                return Ok(appResponse);
-            }
-            return BadRequest(appResponse);
+
+            return Ok(appResponse);
+            //if (appResponse.Succeeded)
+            //{
+            //}
+            //return BadRequest(appResponse);
         }
         [Authorize]
         [HttpGet("get-info")]
         public async Task<IActionResult> GetInfo()
         {
             var response = await _appService.GetByClaims(User);
-            if (response.Succeeded)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return Ok(response);
+            //if (response.Succeeded)
+            //{
+            //}
+            //return BadRequest(response);
+        }
+        [Authorize]
+        [HttpPost("get-info-by-account-number")]
+        public async Task<IActionResult> GetInfoByAcctNo(GetInfoByAccountNoModel request)
+        {
+            var response = await _appService.GetByAccountNo(request.AccountNo);
+            return Ok(response);
+            //if (response.Succeeded)
+            //{
+            //}
+            //return BadRequest(response);
         }
         // TODO: request contain: credential{username, old password, new password}, 
         [HttpPost("change-password")]
@@ -131,7 +140,6 @@ namespace HDBank.API.Controllers
         {
             ChangePasswordData changePasswordData = new()
             {
-                UserName = request.UserName,
                 OldPassword = request.OldPassword,
                 NewPassword = request.NewPassword
             };
@@ -143,11 +151,12 @@ namespace HDBank.API.Controllers
             };
 
             var response = await _service.ChangePassword(bankRequest);
-            if (response.Response.ResponseCode == "00")
+            if (response.Response.ResponseCode != "00")
             {
                 return Ok(response.Response.ResponseMessage);
             }
-            return BadRequest(response.Response.ResponseMessage);
+            var appResponse = await _appService.ChangePassword(request, User);
+            return Ok(response.Response.ResponseMessage);
         }
         [Authorize]
         [HttpGet("get-access-token")]
@@ -178,11 +187,11 @@ namespace HDBank.API.Controllers
                 return BadRequest(response.Response.ResponseMessage);
             }
             var appResponse = await _appService.CreateTransaction(request, User);
-            if (appResponse.Succeeded)
-            {
                 return Ok(appResponse);
-            }
-            return BadRequest(appResponse);
+            //if (appResponse.Succeeded)
+            //{
+            //}
+            //return BadRequest(appResponse);
         }
         // TODO: request contain: Get trafer history
         // response contain:
@@ -204,20 +213,24 @@ namespace HDBank.API.Controllers
             return BadRequest(response.Response.ResponseMessage);
         }
         // Bug: post but in swagger is get
-        [HttpPost("balance")]
-        public async Task<IActionResult> Balance(BalanceModel request)
+        [Authorize]
+        [HttpGet("balance")]
+        public async Task<IActionResult> Balance()
         {
+            var userResponse = await _appService.GetByClaims(User);
+            if (!userResponse.Succeeded)
+                return BadRequest(userResponse);
             BankRequest<BalanceRequestData> bankRequest = new();
             bankRequest.Data = new BalanceRequestData()
             {
-                AccountNumber = request.AccountNumber
+                AccountNumber = userResponse.ResultObject.AccountNo
             };
             var response = await _service.Balance(bankRequest);
             if (response.Response.ResponseCode == "00")
             {
-                return Ok(response.Data.Amount);
+                return Ok(new ApiSuccessResult<string>(response.Data.Amount));
             }
-            return BadRequest(response.Response.ResponseMessage);
+            return Ok(new ApiErrorResult<string>("Cannot get balance"));
         }
     }
 }
