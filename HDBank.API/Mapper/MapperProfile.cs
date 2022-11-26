@@ -12,6 +12,7 @@ namespace HDBank.Core.Mapper
             CreateMap<RegisterModel, AppUser>()
                 .ForMember(des => des.PhoneNumber, act => act.MapFrom(src => src.Phone));
             CreateMap<AppUser, UserInfoResponse>();
+            CreateMap<Transaction, TransactionHistory>();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace HDBank.Infrastructure.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public int Amount { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public string SenderId { get; set; }
         public AppUser Sender { get; set; }

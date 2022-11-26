@@ -18,6 +18,7 @@ namespace HDBank.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IAPIService _service;
@@ -29,6 +30,7 @@ namespace HDBank.API.Controllers
             _appService = appService;
         }
         public string key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDY1DzbqoavP8UVPYARHpy+zPlaFiBdf3imr5m4RdbHCwMueevk+NoWV2dqL/LBnk8oWMqWkgMDnTleXe/jvj6zQEuuCoBVDiZq4k0JXbHdTmXg0/fH7d9YD0BsSkpSJH8A9RBSnjvIzKLNHXKTUyxG1QIIKbU2lhVAB/jK2UtdwIDAQAB";
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel request)
         {
@@ -51,13 +53,10 @@ namespace HDBank.API.Controllers
             }
             var appResponse = await _appService.Authenticate(request);
             return Ok(appResponse);
-            //if (appResponse.Succeeded)
-            //{
-            //}
-            //return BadRequest(appResponse);
 
         }
         // TODO: request contain: credential{username, password}, email, number, phone
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel request)
         {
@@ -108,14 +107,12 @@ namespace HDBank.API.Controllers
 
             return Ok(appResponse);
         }
-        [Authorize]
         [HttpGet("get-info")]
         public async Task<IActionResult> GetInfo()
         {
             var response = await _appService.GetByClaims(User);
             return Ok(response);
         }
-        [Authorize]
         [HttpPost("get-info-by-account-number")]
         public async Task<IActionResult> GetInfoByAcctNo(GetInfoByAccountNoModel request)
         {
@@ -123,7 +120,6 @@ namespace HDBank.API.Controllers
             return Ok(response);
         }
         // TODO: request contain: credential{username, old password, new password}, 
-        [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel request)
         {
@@ -144,12 +140,11 @@ namespace HDBank.API.Controllers
             var response = await _service.ChangePassword(bankRequest);
             if (response.Response.ResponseCode != "00")
             {
-                return Ok(response.Response.ResponseMessage);
+                return Ok(new ApiErrorResult<bool>(response.Response.ResponseMessage));
             }
             var appResponse = await _appService.ChangePassword(request, User);
-            return Ok(response.Response.ResponseMessage);
+            return Ok(appResponse);
         }
-        [Authorize]
         [HttpGet("get-access-token")]
         public async Task<IActionResult> GetAccessToken()
         {
@@ -159,7 +154,6 @@ namespace HDBank.API.Controllers
         // 
         // TODO: TRANFER(NHON) request contain: ?description, amount, to account number
         // response contain: 
-        [Authorize]
         [HttpPost("tranfer")]
         public async Task<IActionResult> Tranfer(TransferModel request)
         {
@@ -175,14 +169,10 @@ namespace HDBank.API.Controllers
             var response = await _service.Tranfer(bankRequest);
             if (response.Response.ResponseCode != "00")
             {
-                return BadRequest(response.Response.ResponseMessage);
+                return Ok(new ApiErrorResult<bool>(response.Response.ResponseMessage));
             }
             var appResponse = await _appService.CreateTransaction(request, User);
-                return Ok(appResponse);
-            //if (appResponse.Succeeded)
-            //{
-            //}
-            //return BadRequest(appResponse);
+            return Ok(appResponse);
         }
         // TODO: request contain: Get trafer history
         // response contain:
@@ -197,14 +187,13 @@ namespace HDBank.API.Controllers
                 ToDate = request.ToDate
             };
             var response = await _service.TranferHistory(bankRequest);
-            if (response.Response.ResponseCode == "00")
+            if (response.Response.ResponseCode != "00")
             {
                 return Ok(response.Data);
             }
             return BadRequest(response.Response.ResponseMessage);
         }
         // Bug: post but in swagger is get
-        [Authorize]
         [HttpGet("balance")]
         public async Task<IActionResult> Balance()
         {

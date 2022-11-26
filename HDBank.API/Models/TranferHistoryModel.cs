@@ -4,11 +4,9 @@ namespace HDBank.API.Models
 {
     public class TranferHistoryModel
     {
-        [JsonProperty("acctNo")]
-        public string AccountNumber { get; set; }
         [JsonProperty("fromDate")]
-        public string FromDate { get; set; }
+        public DateTime FromDate { get; set; }
         [JsonProperty("toDate")]
-        public string ToDate { get; set; }
+        public DateTime ToDate { get; set; }
     }
 }
