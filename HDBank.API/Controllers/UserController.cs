@@ -107,10 +107,6 @@ namespace HDBank.API.Controllers
             var appResponse = await _appService.Register(request, loginResponse.Data.AccountNo);
 
             return Ok(appResponse);
-            //if (appResponse.Succeeded)
-            //{
-            //}
-            //return BadRequest(appResponse);
         }
         [Authorize]
         [HttpGet("get-info")]
@@ -118,10 +114,6 @@ namespace HDBank.API.Controllers
         {
             var response = await _appService.GetByClaims(User);
             return Ok(response);
-            //if (response.Succeeded)
-            //{
-            //}
-            //return BadRequest(response);
         }
         [Authorize]
         [HttpPost("get-info-by-account-number")]
@@ -129,17 +121,16 @@ namespace HDBank.API.Controllers
         {
             var response = await _appService.GetByAccountNo(request.AccountNo);
             return Ok(response);
-            //if (response.Succeeded)
-            //{
-            //}
-            //return BadRequest(response);
         }
         // TODO: request contain: credential{username, old password, new password}, 
+        [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel request)
         {
+            var userInfo = await _appService.GetByClaims(User);
             ChangePasswordData changePasswordData = new()
             {
+                UserName = userInfo.ResultObject.UserName,
                 OldPassword = request.OldPassword,
                 NewPassword = request.NewPassword
             };
