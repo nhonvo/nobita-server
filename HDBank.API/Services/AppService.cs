@@ -33,7 +33,7 @@ namespace HDBank.API.Services
                 return new ApiErrorResult<string>("User does not exist!");
             var result = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!result)
-                return new ApiErrorResult<string>("Username or Password Incorrect!");
+                return new ApiErrorResult<string>("Username or Password incorrect!");
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtManager.Authenticate(user, roles);
             return new ApiSuccessResult<string>(token);
