@@ -12,8 +12,8 @@ namespace HDBank.API.Services
         Task<ApiResult<bool>> ChangePassword(ChangePasswordModel request, ClaimsPrincipal claims);
         Task<ApiResult<UserInfoResponse>> GetByClaims(ClaimsPrincipal claims);
         Task<ApiResult<UserInfoResponse>> GetByAccountNo(string accountNo);
-        Task<ApiResult<TransactionHistoryResponse>> GetTransactionHistory(TranferHistoryModel request, string acctNo);
-        Task<ApiResult<TransactionHistoryResponse>> GetAllTransactionHistory(string acctNo);
+        Task<ApiResult<IEnumerable<TransactionHistory>>> GetTransactionHistory(TranferHistoryModel request, string acctNo);
+        Task<ApiResult<IEnumerable<TransactionHistory>>> GetAllTransactionHistory(string acctNo);
         Task<ApiResult<bool>> CreateTransaction(TransferModel request, ClaimsPrincipal claims);
     }
 }

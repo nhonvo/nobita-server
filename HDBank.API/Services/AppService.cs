@@ -68,8 +68,6 @@ namespace HDBank.API.Services
                 return new ApiErrorResult<string>("This Username Already Used!");
             if (isEmailExists)
                 return new ApiErrorResult<string>("This Email Already Used");
-            //if (request.Password != request.ConfirmPassword)
-            //    return new ApiErrorResult<bool>("Password and Confirm Password are not the same");
             var user = _mapper.Map<AppUser>(request);
             user.AccountNo = accountNo;
             var result = await _userManager.CreateAsync(user, request.Password);
@@ -120,20 +118,20 @@ namespace HDBank.API.Services
                 return new ApiErrorResult<bool>(string.Join(' ', result.Errors.Select(error => error.Description)));
             return new ApiSuccessResult<bool>(true);
         }
-        public async Task<ApiResult<TransactionHistoryResponse>> GetAllTransactionHistory(string acctNo)
+        public async Task<ApiResult<IEnumerable<TransactionHistory>>> GetAllTransactionHistory(string acctNo)
         {
             var transactions = await _context.Transactions
                 .Include(t => t.Sender)
                 .Include(t => t.Receiver)
                 .ToListAsync();
             var history = _mapper.Map<List<TransactionHistory>>(transactions);
-            var histories = new TransactionHistoryResponse()
-            {
-                Histories = history
-            };
-            return new ApiSuccessResult<TransactionHistoryResponse>(histories);
+            // var histories = new TransactionHistoryResponse()
+            // {
+            //     Histories = history
+            // };
+            return new ApiSuccessResult<IEnumerable<TransactionHistory>>(history);
         }
-        public async Task<ApiResult<TransactionHistoryResponse>> GetTransactionHistory(TranferHistoryModel request, string acctNo)
+        public async Task<ApiResult<IEnumerable<TransactionHistory>>> GetTransactionHistory(TranferHistoryModel request, string acctNo)
         {
             var transactions = await _context.Transactions
                 .Where(t => t.CreatedDate >= request.FromDate && t.CreatedDate < request.ToDate)
@@ -141,9 +139,7 @@ namespace HDBank.API.Services
                 .Include(t => t.Receiver)
                 .ToListAsync();
             var history = _mapper.Map<IList<TransactionHistory>>(transactions);
-            var histories = new TransactionHistoryResponse();
-            histories.Histories = history;
-            return new ApiSuccessResult<TransactionHistoryResponse>(histories);
+            return new ApiSuccessResult<IEnumerable<TransactionHistory>>(history);
         }
     }
 }

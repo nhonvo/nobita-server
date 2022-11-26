@@ -153,7 +153,7 @@ namespace HDBank.API.Controllers
             return Ok(response.AccessToken);
         }
         [HttpGet("get-all-transaction")]
-        public async Task<ActionResult<TransactionHistoryResponse>> GetAllTransactions()
+        public async Task<IActionResult> GetAllTransactions()
         {
             var userResponse = await _appService.GetByClaims(User);
             var appResponse = await _appService.GetAllTransactionHistory(userResponse.ResultObject.AccountNo);
@@ -185,7 +185,7 @@ namespace HDBank.API.Controllers
         // TODO: request contain: Get trafer history
         // response contain:
         [HttpPost("get-transfer-history")]
-        public async Task<ActionResult<TransactionHistoryResponse>> GetTransferHistory(TranferHistoryModel request)
+        public async Task<IActionResult> GetTransferHistory(TranferHistoryModel request)
         {
             var userResponse = await _appService.GetByClaims(User);
 
